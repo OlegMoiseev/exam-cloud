@@ -21,7 +21,6 @@ window.onload = async () => {
     return;
   }
 
-  // NEW - check for the code and state parameters
   const query = window.location.search;
   if (query.includes("code=") && query.includes("state=")) {
 
@@ -41,7 +40,9 @@ const updateUI = async () => {
   document.getElementById("btn-logout").disabled = !isAuthenticated;
   document.getElementById("btn-login").disabled = isAuthenticated;
 
-   // NEW - add logic to show/hide gated content after authentication
+  document.getElementById("btn-logout").hidden = !isAuthenticated;
+  document.getElementById("btn-login").hidden = isAuthenticated;
+
   if (isAuthenticated) {
     document.getElementById("gated-content").classList.remove("hidden");
 
@@ -52,6 +53,11 @@ const updateUI = async () => {
     document.getElementById("ipt-user-profile").innerHTML = JSON.stringify(
       await auth0.getUser()
     );
+    let user_info = await auth0.getUser();
+    console.log(user_info);
+    document.getElementById("profile-name").innerHTML =  user_info["name"];
+    document.getElementById("profile-avatar").hidden = false;
+    document.getElementById("profile-avatar").src = user_info["picture"];
 
   } else {
     document.getElementById("gated-content").classList.add("hidden");
